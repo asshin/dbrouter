@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.wang.middleware.db.router.config.DataSourceAutoConfig
