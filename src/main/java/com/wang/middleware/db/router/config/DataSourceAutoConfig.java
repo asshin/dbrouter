@@ -48,6 +48,16 @@ public class DataSourceAutoConfig implements EnvironmentAware {
     public DBRouterJoinPoint point(DBRouterConfig dbRouterConfig, IDBRouterStrategy dbRouterStrategy) {
         return new DBRouterJoinPoint(dbRouterConfig, dbRouterStrategy);
     }
+
+
+    @Bean public  DBRouterConfig dbRouterConfig(){
+
+        return new DBRouterConfig(dbCount,dtCount,routerKey);
+    }
+    @Bean
+    public Interceptor plugin() {
+        return new DynamicMybatisPlugin();
+    }
     @Bean
     public DataSource dataSource(){
         //创建数据源
@@ -69,16 +79,6 @@ public class DataSourceAutoConfig implements EnvironmentAware {
     public IDBRouterStrategy dbRouterStrategy(DBRouterConfig dbRouterConfig){
         return  new DBRouterStrategyHashCode(dbRouterConfig);
     }
-    @Bean public  DBRouterConfig dbRouterConfig(){
-
-        return new DBRouterConfig(dbCount,dtCount,routerKey);
-    }
-    @Bean
-    public Interceptor plugin() {
-        return new DynamicMybatisPlugin();
-    }
-
-
     @Bean
     public TransactionTemplate transactionTemplate(DataSource dataSource){
         DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
