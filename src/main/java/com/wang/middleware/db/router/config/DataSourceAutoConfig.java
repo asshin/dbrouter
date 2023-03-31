@@ -1,13 +1,15 @@
 package com.wang.middleware.db.router.config;
 
 import com.wang.middleware.db.router.DBRouterConfig;
+
+import com.wang.middleware.db.router.DBRouterJoinPoint;
 import com.wang.middleware.db.router.dynamic.DynamicDataSource;
 import com.wang.middleware.db.router.dynamic.DynamicMybatisPlugin;
 import com.wang.middleware.db.router.strategy.IDBRouterStrategy;
 import com.wang.middleware.db.router.strategy.impl.DBRouterStrategyHashCode;
 import com.wang.middleware.db.router.util.PropertyUtil;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.transaction.Transaction;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +41,13 @@ public class DataSourceAutoConfig implements EnvironmentAware {
     /*数据路由字段*/
     private  String routerKey;
 
+
+
+    @Bean(name = "db-router-point")
+    @ConditionalOnMissingBean
+    public DBRouterJoinPoint point(DBRouterConfig dbRouterConfig, IDBRouterStrategy dbRouterStrategy) {
+        return new DBRouterJoinPoint(dbRouterConfig, dbRouterStrategy);
+    }
     @Bean
     public DataSource dataSource(){
         //创建数据源
@@ -68,6 +77,7 @@ public class DataSourceAutoConfig implements EnvironmentAware {
     public Interceptor plugin() {
         return new DynamicMybatisPlugin();
     }
+
 
     @Bean
     public TransactionTemplate transactionTemplate(DataSource dataSource){

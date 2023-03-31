@@ -1,8 +1,14 @@
 package com.wang.middleware.test;
 
+import com.wang.middleware.UserDao;
 import com.wang.middleware.db.router.annotation.DBRouter;
-import org.junit.Test;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 
 /**
@@ -10,8 +16,11 @@ import java.lang.reflect.Method;
  * 公众号：bugstack虫洞栈
  * Create by 小傅哥(fustack)
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes =  com.wang.middleware.db.router.config.DataSourceAutoConfig.class)
 public class ApiTest {
-
+@Resource
+UserDao userDao;
     public static void main(String[] args) {
         System.out.println("Hi");
     }
@@ -45,8 +54,7 @@ public class ApiTest {
         Method method = iUserDaoClass.getMethod("insertUser", String.class);
 
         DBRouter dbRouter = method.getAnnotation(DBRouter.class);
-        UserDao userDao = new UserDao();
-        userDao.insertUser("wang");
+         userDao.insertUser("wang");
         System.out.println(dbRouter.key());
 
     }
